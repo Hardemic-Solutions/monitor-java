@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ teste-pipeline ]
+    branches: [ pipeline ]
   workflow_dispatch:
 jobs:
   CI:
