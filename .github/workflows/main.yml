@@ -1,0 +1,23 @@
+    on: push
+
+       branches: 
+       - main
+
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest #executando o container
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
+    
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0 # pega os dados do repositório e faz um check-out
+      with:
+        server: ${{ secrets.ftp_host}} #hardmic@2022
+        username: ${{ secrets.ftp_user}} #hardmic@2022
+        password: ${{ secrets.ftp_password}} #123456
+        server-dir: jar/hardmic-pi-test/Dockerfile
+
+         #cada etapa tem o seu próprio log pelo githubActions
