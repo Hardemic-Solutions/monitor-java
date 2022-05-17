@@ -24,7 +24,11 @@ public class Application {
         
         Logs logs = new Logs();
         
+
         logs.warning("Atenção!");
+
+        logs.warning("Atenção trlala");
+
        
         if(Arrays.stream(args).anyMatch("cli"::equals)){
             System.out.println("Application CLI\n");
