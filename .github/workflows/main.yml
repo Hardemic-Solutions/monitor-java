@@ -5,23 +5,23 @@ on:
   workflow_dispatch:
 jobs:
   CI:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-20.04
     
     steps:
       - uses: actions/checkout@v2
 
       - name: Docker Login
-        uses: docker/login-action@v1.9.0
+        uses: docker/login-action@v2.0.0
         with:
-          username: ${{secrets.FTP_USER}} # hardemic@2022
-          password: ${{secrets.FTP_PASSWORD}} # hardmic@2022
+          username: ${{secrets.DOCKERHUB_USER}}
+          password: ${{secrets.DOCKERHUB_PWD}}
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.4.0
         with:
-          context: ./jar/hardemic-pi-test
-          file: ./jar/hardemic-pi-test/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: |
-            hardemic/monitor:latest
-            hardemic/monitor:${{github.run_number}} 
+            hardemic/monitor-java:latest
+            hardemic/monitor-java:${{github.run_number}} 
