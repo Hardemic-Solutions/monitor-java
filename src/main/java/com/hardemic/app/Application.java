@@ -23,8 +23,9 @@ public class Application {
         Scanner leitor = new Scanner(System.in);
         
         Logs logs = new Logs();
-        
+
         logs.warning("Atenção trlala");
+
        
         if(Arrays.stream(args).anyMatch("cli"::equals)){
             System.out.println("Application CLI\n");

@@ -6,7 +6,6 @@ on:
 jobs:
   CI:
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
 
@@ -24,4 +23,5 @@ jobs:
           push: true
           tags: |
             hardemic/monitor-java:latest
-            hardemic/monitor-java:${{github.run_number}}
+            hardemic/monitor-java:${{github.run_number}} 
+
