@@ -1,12 +1,11 @@
 name: CI
 on:
   push:
-    branches: [ pipeline ]
+    branches: [pipeline]
   workflow_dispatch:
 jobs:
   CI:
     runs-on: ubuntu-20.04
-    
     steps:
       - uses: actions/checkout@v2
 
@@ -25,3 +24,4 @@ jobs:
           tags: |
             hardemic/monitor-java:latest
             hardemic/monitor-java:${{github.run_number}} 
+
