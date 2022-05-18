@@ -25,8 +25,6 @@ public class Application {
         Logs logs = new Logs();
         
 
-        logs.warning("Atenção!");
-
         logs.warning("Atenção trlala");
 
        
