@@ -23,10 +23,7 @@ public class Application {
         Scanner leitor = new Scanner(System.in);
         
         Logs logs = new Logs();
-        
-
-        logs.warning("Atenção!");
-
+    
         logs.warning("Atenção trlala");
 
        
