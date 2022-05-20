@@ -14,11 +14,14 @@ import com.hardemic.app.UtilApp;
 
 import com.hardemic.app.UtilLooca;
 import com.hardemic.app.entities.Computador;
+import com.hardemic.app.entities.HardComputador;
 //import com.hardemic.app.entities.Log;
 import com.hardemic.app.services.Slack;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Monitor {
 
@@ -32,6 +35,9 @@ public class Monitor {
     
     private final LogUseCase logUseCase = new LogUseCase();
     private final ComputadorUseCase computadorUseCase = new ComputadorUseCase();
+    private final HardComputadorUseCase hardComputadorUseCase = new HardComputadorUseCase();
+    
+    
 
     // Grupos looca
     private Sistema sistema;
@@ -60,14 +66,16 @@ public class Monitor {
         return looca;
     }
 
-    public void init() throws InterruptedException, Exception {
+    public void init() {
         
         try {
             inicializado++;
             List<Computador> computadores = computadorUseCase.findByHostname(util.getHostName());
-
+            
             if (!computadores.isEmpty()) {
                 this.fkComputador = computadores.get(0).getId();
+                
+                List<HardComputador> hardComputadores = hardComputadorUseCase.findByFkComputador(this.fkComputador);
                 
                 if(inicializado == 1){
                     slack.infoMessage(":computer: *Novo device conectado:* App rodando no device *" + util.getHostName() + "*");
@@ -75,12 +83,21 @@ public class Monitor {
                 // Informações do sistema
                 sistema = looca.getSistema();
 
-                System.out.println("=== MONITORAMENTO DE MÁQUINA ===\n");
-
-                // Informações da máquina
+                System.out.println("===================== MONITORAMENTO DE MÁQUINA =====================");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("INFORMAÇÕES DA MÁQUINA");
+                System.out.println("");
                 System.out.println("HOSTNAME: " + util.getHostName());
                 System.out.println("SO: " + sistema.getSistemaOperacional());
-
+                System.out.println("PATRIMÔNIO: " + computadores.get(0).getPatrimonio());
+                System.out.println("");
+                System.out.println("INFORMAÇÕES DO HARDWARE");
+                System.out.println("");
+                System.out.println("DISCO:" + hardComputadores.get(0).getArmazenamento());
+                System.out.println("RAM:" + hardComputadores.get(0).getRam());
+                System.out.println("GPU:" + hardComputadores.get(0).getGpu());
+                
                 while (true) {
                     this.loop();
                     Thread.sleep(2000);
@@ -104,9 +121,13 @@ public class Monitor {
 
         } catch (Exception e) {
             System.out.println("Erro : " + e.getMessage());
-            System.out.println("Nova tentativa em 2s...");
-            Thread.sleep(2000);
-            this.init();
+            System.out.println("Nova tentativa em 1s...");
+            try {
+                Thread.sleep(1000);
+                this.init();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Monitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } 
     }
 
