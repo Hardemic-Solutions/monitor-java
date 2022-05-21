@@ -6,7 +6,7 @@
 package com.hardemic.app.entities;
 
 public class Computador {
-    private Integer id;
+    private Integer id_computador;
     private String hostname;;
     private String patrimonio;
     private Integer fk_empresa;
@@ -16,12 +16,12 @@ public class Computador {
         
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getId_Computador() {
+        return id_computador;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId_Computador(Integer id_computador) {
+        this.id_computador = id_computador;
     }
 
     public String getHostname() {
@@ -55,5 +55,12 @@ public class Computador {
     public void setFk_sala(Integer fk_sala) {
         this.fk_sala = fk_sala;
     }
+
+    @Override
+    public String toString() {
+        return "Computador{" + "id=" + id_computador + ", hostname=" + hostname + ", patrimonio=" + patrimonio + ", fk_empresa=" + fk_empresa + ", fk_sala=" + fk_sala + '}';
+    }
+    
+    
     
 }

@@ -16,8 +16,11 @@ import java.net.URL;
 import java.util.Properties;
 import org.json.JSONObject;
 
+import com.hardemic.app.utils.Logs;
+
 public class Slack {
     private String url;
+    private Logs logs = new Logs();
      
     public Slack() {
         try {
@@ -31,15 +34,16 @@ public class Slack {
 
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo de configurações não encontrado...");
-            
+            logs.warning("Arquivo de configurações não encontrado");
         } catch (IOException e) {
             System.out.println("Erro ao ler arquivos de configurações...");
+            logs.warning("Erro ao ler arquivo de configurações");
         } 
     }
      
      
      
-     private void sendMessage(JSONObject message) throws Exception {
+     private void sendMessage(JSONObject message){
         try{
             URL obj = new URL(this.url);
 
@@ -60,8 +64,6 @@ public class Slack {
 //            System.out.println("POST parameters: " + message.toString());
 //            System.out.println("Response Code: " + responseCode);
 
-            System.out.println("Enviando notificação para o slack");
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
             String inputLine;
@@ -73,9 +75,10 @@ public class Slack {
             }
 
             reader.close();
-            System.out.println("Success.");
+            
         }catch(Exception e){
             System.out.println("POST slack api failed");
+            logs.warning("Erro ao enviar alerta para o slack");
         }
     }
      
@@ -84,6 +87,7 @@ public class Slack {
          
         json.put("text", " :information_source: *INFO* \n\n \t" + message);
         this.sendMessage(json);
+//        System.out.println("Mensagem de info enviada com sucesso");
      }
      
      public void warningMessage(String message) throws Exception{
@@ -91,6 +95,7 @@ public class Slack {
          
         json.put("text", " :warning: *ALERT* \n\n \t" + message);
         this.sendMessage(json);
+//        System.out.println("Mensagem de atenção enviada com sucesso");
      }
      
      public void errorMessage(String message) throws Exception{
@@ -98,6 +103,7 @@ public class Slack {
          
         json.put("text", " :exclamation: *URGENT* \n\n \t" + message);
         this.sendMessage(json);
+//        System.out.println("Mensagem de erro enviada com sucesso");
      }
      
      public void personalMessage(String message) throws Exception {
@@ -105,5 +111,6 @@ public class Slack {
          
         json.put("text", message);
         this.sendMessage(json);
+//        System.out.println("Mensagem personalizada enviada com sucesso");
      }
 }

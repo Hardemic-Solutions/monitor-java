@@ -9,13 +9,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.github.britooo.looca.api.core.Looca;
 
 public class Logs {
 
-    String nome_arquivo;
-    LocalDateTime dataAtual;
-    File arquivo;
-    File diretorio;
+    private String nome_arquivo;
+    private LocalDateTime dataAtual;
+    private File arquivo;
+    private File diretorio;
+    private Looca locca = new Looca();
+    private String rootDir;
+    private String SO;
 
     public Logs() {
 
@@ -35,13 +41,21 @@ public class Logs {
 
     private void gerar_Log(String nivel, String texto) {
         try {
-            diretorio = new File("C:\\hardemic_logs");
+            this.SO = locca.getSistema().getSistemaOperacional();
+            
+            if (SO.contains("Windows")){
+               this.rootDir = "C:\\";
+            }else{
+                this.rootDir = "home/$USER/";
+            }
+            
+            diretorio = new File(rootDir + "hardemic_logs");
             if (!diretorio.exists()) {
                 diretorio.mkdir();
             }
             dataAtual = LocalDateTime.now();
             this.nome_arquivo = "hardemic_"  + dataAtual.getDayOfMonth() + "_" + dataAtual.getMonthValue() + "_" + dataAtual.getYear();
-            arquivo = new File("C:\\hardemic_logs\\" + nome_arquivo + ".txt");
+            arquivo = new File(rootDir + nome_arquivo + ".txt");
 
             if (!arquivo.exists()) {
                 arquivo.createNewFile();
@@ -55,7 +69,7 @@ public class Logs {
             }
 
             bw.newLine();
-            bw.write("[" + nivel + "]:" + texto);
+            bw.write("[" + dataAtual.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "]["+ nivel +"]: " + texto);
 
             bw.close();
             fw.close();

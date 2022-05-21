@@ -39,7 +39,7 @@ public class LogRepository {
                     temperatura
             );
             
-            System.out.println("Inserindo dados no BD...");
+//            System.out.println("Inserindo dados no BD...");;
 
             return true;
         } catch (DataAccessException e) {

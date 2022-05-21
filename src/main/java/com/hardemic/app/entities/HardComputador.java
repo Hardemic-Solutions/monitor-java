@@ -7,9 +7,9 @@ package com.hardemic.app.entities;
 
 public class HardComputador {
     private Integer id_hard;
-    private Integer ram;
-    private Integer armazenamento;
-    private Integer gpu; 
+    private Double ram;
+    private Double armazenamento;
+    private Double gpu; 
     private Integer fk_computador; 
     private String dataHardComputador; 
     private String SO; 
@@ -27,27 +27,27 @@ public class HardComputador {
         this.id_hard = id_hard;
     }
 
-    public Integer getRam() {
+    public Double getRam() {
         return ram;
     }
 
-    public void setRam(Integer ram) {
+    public void setRam(Double ram) {
         this.ram = ram;
     }
 
-    public Integer getArmazenamento() {
+    public Double getArmazenamento() {
         return armazenamento;
     }
 
-    public void setArmazenamento(Integer armazenamento) {
+    public void setArmazenamento(Double armazenamento) {
         this.armazenamento = armazenamento;
     }
 
-    public Integer getGpu() {
+    public Double getGpu() {
         return gpu;
     }
 
-    public void setGpu(Integer gpu) {
+    public void setGpu(Double gpu) {
         this.gpu = gpu;
     }
 

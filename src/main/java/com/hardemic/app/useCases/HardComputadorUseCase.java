@@ -16,10 +16,10 @@ public class HardComputadorUseCase {
         return hardComputadoresRepository.index(fk_computador);
     }
     
-    public boolean store(Integer ram, Integer armazenamento, Integer gpu, Integer fk_computador, String SO){
+    public void store(Double ram, Double armazenamento, Double gpu, Integer fk_computador, String SO){
         HardComputadoresRepository hardComputadoresRepository = new HardComputadoresRepository();
         
-        return hardComputadoresRepository.store(ram, armazenamento, gpu, fk_computador, SO);
+        hardComputadoresRepository.store(ram, armazenamento, gpu, fk_computador, SO);
     }
     
     public List<HardComputador> findById(Integer id){

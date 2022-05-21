@@ -14,11 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class HardComputadoresRepository {
 
     public List<HardComputador> index(Integer fk_computador) {
-        try{
-        JdbcTemplate template = new Connection().createConnection();
-        return template.query("SELECT * FROM tb_computadores where fk_computador = ?", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
-            
-        }catch (DataAccessException e) {
+        try {
+            JdbcTemplate template = new Connection().createConnection();
+            return template.query("SELECT * FROM tb_hard_computadores where fk_computador = ? order by id_hard desc;", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
+        } catch (DataAccessException e) {
             System.out.println("Erro SQL (listar hardware do computador no bd): " + e.getMessage());
             return null;
         } catch (Exception e) {
@@ -27,45 +26,18 @@ public class HardComputadoresRepository {
         }
     }
 
-    public boolean store(Integer ram, Integer armazenamento, Integer gpu, Integer fk_computador, String SO) {
-        try {
-            JdbcTemplate template = new Connection().createConnection();
-            template.update("INSERT INTO * tb_hard_computadores ( ram, armazenamento, gpu, fk_computador, SO ) VALUES (?, ?, ?, ?, ?)", ram, armazenamento, gpu, fk_computador, SO);
-            return true;
-        } catch (DataAccessException e) {
-            System.out.println("Erro SQL (inserir hardware do computador no bd): " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            System.out.println("Erro desconhecido (inserir hardware do computador no bd): " + e.getMessage());
-            return false;
-        }
+    public void store(Double ram, Double armazenamento, Double gpu, Integer fk_computador, String SO) {
+        JdbcTemplate template = new Connection().createConnection();
+        template.update("INSERT INTO tb_hard_computadores ( ram, armazenamento, gpu, fk_computador, SO ) VALUES (?, ?, ?, ?, ?)", ram, armazenamento, gpu, fk_computador, SO);
     }
 
     public List<HardComputador> findById(Integer id) {
-        try {
-            JdbcTemplate template = new Connection().createConnection();
-            return template.query("SELECT * FROM tb_hard_computadores where id = ?", new BeanPropertyRowMapper<>(HardComputador.class), id);
-        } catch (DataAccessException e) {
-            System.out.println("Erro SQL (inserir hardware do computador no bd): " + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            System.out.println("Erro desconhecido (inserir device no bd): " + e.getMessage());
-            return null;
-        }
-
+        JdbcTemplate template = new Connection().createConnection();
+        return template.query("SELECT * FROM tb_hard_computadores where id = ?", new BeanPropertyRowMapper<>(HardComputador.class), id);
     }
 
     public List<HardComputador> findByFkComputador(Integer fk_computador) {
-        try {
-            JdbcTemplate template = new Connection().createConnection();
-            return template.query("SELECT * FROM tb_hard_computadores where fk_computador = ?", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
-        } catch (DataAccessException e) {
-            System.out.println("Erro SQL (listar hardware do computador por hostname): " + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            System.out.println("Erro desconhecido (listar hardware do computador por hostname no bd): " + e.getMessage());
-            return null;
-        }
-
+        JdbcTemplate template = new Connection().createConnection();
+        return template.query("SELECT * FROM tb_hard_computadores where fk_computador = ?", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
     }
 }
