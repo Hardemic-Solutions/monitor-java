@@ -4,15 +4,10 @@
  */
 package com.hardemic.app.repositories;
 
-import com.hardemic.app.entities.Computador;
 import com.hardemic.database.Connection;
 import com.hardemic.app.entities.Log;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,7 +39,7 @@ public class LogRepository {
                     temperatura
             );
             
-            System.out.println("Inserindo dados no BD...");
+//            System.out.println("Inserindo dados no BD...");;
 
             return true;
         } catch (DataAccessException e) {
