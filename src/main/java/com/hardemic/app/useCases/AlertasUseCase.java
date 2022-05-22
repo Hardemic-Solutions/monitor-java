@@ -8,7 +8,7 @@ package com.hardemic.app.useCases;
 import com.hardemic.app.repositories.AlertasRepository;
 
 public class AlertasUseCase {
-    public boolean store(Integer fk_log, String nome_alerta){
+    public boolean store(Long fk_log, String nome_alerta){
         AlertasRepository alertasRepository = new AlertasRepository();
         return alertasRepository.store(fk_log,nome_alerta);
     }

@@ -44,19 +44,19 @@ public class Logs {
             this.SO = locca.getSistema().getSistemaOperacional();
             
             if (SO.contains("Windows")){
-               this.rootDir = "C:\\";
+              this.rootDir = "C:\\";
             }else{
-                this.rootDir = "/home/lukas/";
+                this.rootDir = "/home/lukas/";;
             }
             
-            diretorio = new File(rootDir + "hardemic_logs");
+            diretorio = new File(rootDir + "hardemic_logs/");
             
             if (!diretorio.exists()) {
                 diretorio.mkdir();
             }
             dataAtual = LocalDateTime.now();
             this.nome_arquivo = "hardemic_"  + dataAtual.getDayOfMonth() + "_" + dataAtual.getMonthValue() + "_" + dataAtual.getYear();
-            arquivo = new File(rootDir + nome_arquivo + ".txt");
+            arquivo = new File(diretorio + nome_arquivo + ".txt");
 
             if (!arquivo.exists()) {
                 arquivo.createNewFile();

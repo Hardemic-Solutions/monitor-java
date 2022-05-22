@@ -21,10 +21,6 @@ import com.hardemic.app.utils.ClearConsole;
 import com.hardemic.app.utils.Colors;
 import com.hardemic.app.utils.Logs;
 import com.hardemic.app.utils.ProcessarAlerta;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-
 import java.util.List;
 import org.json.JSONObject;
 
@@ -45,11 +41,12 @@ public class Monitor {
     // Grupos looca
     private Sistema sistema;
     private Memoria memoria;
-    private Processador processador = getLooca().getProcessador();
+    private Processador processador = null;
     private DiscosGroup grupoDeDiscos;
 
     // Dados do usuário logado
     private Integer fkComputador;
+    private long idLog;
 
     // Contador para verificar se o sistema já foi iniciado
     private Integer inicializado = 0;
@@ -66,6 +63,7 @@ public class Monitor {
     }
 
     public void init() {
+             
         try {
             JSONObject object = new JSONObject();
             object.put("hostname", util.getHostName());
@@ -157,7 +155,7 @@ public class Monitor {
                 while (true) {
                     Thread.sleep(1000);
                     segundos++;
-                    ClearConsole.clearConsole();;
+                    ClearConsole.clearConsole();
                     this.loop();
                 }
             } else {
@@ -215,7 +213,9 @@ public class Monitor {
         );
 
         System.out.println("======================================================================\n");
-        if (segundos == 20) {
+        
+   
+        if (segundos == 10) {
             try {
                 logUseCase.store(
                         fkComputador,
@@ -233,7 +233,13 @@ public class Monitor {
             segundos = 0;
         }
 
-        if (processarAlerta.init(memoriaDisponivel, discoDisponivel, usoCpu)) {
+        if (processarAlerta.init(fkComputador,
+                        memoriaDisponivel,
+                        discoDisponivel,
+                        0.0,
+                        usoCpu,
+                        0.0,
+                        50.2)) {
             segundos = 0;
         }
         processador = looca.getProcessador();
