@@ -46,10 +46,11 @@ public class Logs {
             if (SO.contains("Windows")){
                this.rootDir = "C:\\";
             }else{
-                this.rootDir = "home/$USER/";
+                this.rootDir = "/home/lukas/";
             }
             
             diretorio = new File(rootDir + "hardemic_logs");
+            
             if (!diretorio.exists()) {
                 diretorio.mkdir();
             }

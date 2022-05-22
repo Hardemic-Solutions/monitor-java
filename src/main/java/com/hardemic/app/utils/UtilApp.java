@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package com.hardemic.app;
+package com.hardemic.app.utils;
 
 public class UtilApp {
     public static Double longToDouble(long valor, int digitos) {

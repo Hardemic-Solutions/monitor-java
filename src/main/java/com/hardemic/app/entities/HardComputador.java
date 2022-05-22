@@ -9,7 +9,7 @@ public class HardComputador {
     private Integer id_hard;
     private Double ram;
     private Double armazenamento;
-    private Double gpu; 
+    private Integer gpu; 
     private Integer fk_computador; 
     private String dataHardComputador; 
     private String SO; 
@@ -43,11 +43,11 @@ public class HardComputador {
         this.armazenamento = armazenamento;
     }
 
-    public Double getGpu() {
+    public Integer getGpu() {
         return gpu;
     }
 
-    public void setGpu(Double gpu) {
+    public void setGpu(Integer gpu) {
         this.gpu = gpu;
     }
 
@@ -73,6 +73,11 @@ public class HardComputador {
 
     public void setSO(String SO) {
         this.SO = SO;
+    }
+
+    @Override
+    public String toString() {
+        return "HardComputador{" + "id_hard=" + id_hard + ", ram=" + ram + ", armazenamento=" + armazenamento + ", gpu=" + gpu + ", fk_computador=" + fk_computador + ", dataHardComputador=" + dataHardComputador + ", SO=" + SO + '}';
     }
     
     
