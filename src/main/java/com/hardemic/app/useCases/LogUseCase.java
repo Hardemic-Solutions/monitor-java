@@ -10,12 +10,9 @@ import java.util.List;
 import com.hardemic.app.entities.Log;
 
 public class LogUseCase {
-    public boolean store(Integer fk_computador, Double memoriaDisponivel, Double discoDisponivel, Double usoGpu, Double usoCpu, Double usoRede, Double temperatura){
-        
+    public long store(Integer fk_computador, Double memoriaDisponivel, Double discoDisponivel, Double usoGpu, Double usoCpu, Double usoRede, Double temperatura){
         LogRepository logRepository = new LogRepository();
-        
         return logRepository.store(fk_computador, memoriaDisponivel, discoDisponivel, usoGpu, usoCpu, usoRede, temperatura);
-        
     }
     
     public List<Log> getLastInsertByComputerId(Integer fk_computador){

@@ -4,6 +4,7 @@ import com.hardemic.app.services.Slack;
 import com.hardemic.app.useCases.ConfigUseCase;
 import com.hardemic.app.entities.Config;
 import com.hardemic.app.services.SocketConnection;
+import com.hardemic.app.useCases.AlertasUseCase;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -12,6 +13,7 @@ public class ProcessarAlerta {
     private final Slack slack = new Slack();
     private final Logs logs = new Logs();
     private final ConfigUseCase configUseCase = new ConfigUseCase();
+    private final AlertasUseCase alertasUseCase = new AlertasUseCase();
     private List<Config> configs;
     private final UtilLooca util = new UtilLooca();
 
@@ -28,7 +30,7 @@ public class ProcessarAlerta {
         this.quantidadeAlertasCPU = 0;
     }
 
-    public boolean init(Double memoriaDisponivel, Double discoDisponivel, Double usoCpu) {
+    public boolean init(Double memoriaDisponivel, Double discoDisponivel, Double usoCpu, Long idLog) {
         try {
             configs = configUseCase.index(fk_empresa);
             boolean alerta = false;
@@ -42,6 +44,11 @@ public class ProcessarAlerta {
                             object.put("hostname", util.getHostName());
                             SocketConnection.getInstance().getSocket().emit("problema", object);
                             alerta = true;
+                            
+                            alertasUseCase.store(
+                                idLog,
+                                "alerta de ram"
+                            );
                         }
                         quantidadeAlertasMemoria++;
                     } else {
@@ -57,6 +64,11 @@ public class ProcessarAlerta {
                             SocketConnection.getInstance().getSocket().emit("problema", object);
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* pouco espaço em disco disponível");
                             alerta = true;
+                            
+                            alertasUseCase.store(
+                                idLog,
+                                "alerta de disco"
+                            );
                         }
                         quantidadeAlertasDisco++;
                     } else {
@@ -72,6 +84,11 @@ public class ProcessarAlerta {
                             SocketConnection.getInstance().getSocket().emit("problema", object);
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* Uso de cpu elevado");
                             alerta = true;
+                            
+                            alertasUseCase.store(
+                                idLog,
+                                "alerta de cpu"
+                            );
                         }
                         quantidadeAlertasCPU++;
                     } else {
