@@ -41,7 +41,7 @@ public class Monitor {
     // Grupos looca
     private Sistema sistema;
     private Memoria memoria;
-    private Processador processador = getLooca().getProcessador();
+    private Processador processador = null;
     private DiscosGroup grupoDeDiscos;
 
     // Dados do usuário logado
@@ -217,7 +217,7 @@ public class Monitor {
    
         if (segundos == 10) {
             try {
-                idLog = logUseCase.store(
+                logUseCase.store(
                         fkComputador,
                         memoriaDisponivel,
                         discoDisponivel,
@@ -233,7 +233,13 @@ public class Monitor {
             segundos = 0;
         }
 
-        if (processarAlerta.init(memoriaDisponivel, discoDisponivel, usoCpu, idLog)) {
+        if (processarAlerta.init(fkComputador,
+                        memoriaDisponivel,
+                        discoDisponivel,
+                        0.0,
+                        usoCpu,
+                        0.0,
+                        50.2)) {
             segundos = 0;
         }
         processador = looca.getProcessador();

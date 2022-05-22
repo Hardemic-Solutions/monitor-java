@@ -5,6 +5,7 @@ import com.hardemic.app.useCases.ConfigUseCase;
 import com.hardemic.app.entities.Config;
 import com.hardemic.app.services.SocketConnection;
 import com.hardemic.app.useCases.AlertasUseCase;
+import com.hardemic.app.useCases.LogUseCase;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -14,6 +15,7 @@ public class ProcessarAlerta {
     private final Logs logs = new Logs();
     private final ConfigUseCase configUseCase = new ConfigUseCase();
     private final AlertasUseCase alertasUseCase = new AlertasUseCase();
+    private final LogUseCase logUseCase = new LogUseCase();
     private List<Config> configs;
     private final UtilLooca util = new UtilLooca();
 
@@ -30,7 +32,7 @@ public class ProcessarAlerta {
         this.quantidadeAlertasCPU = 0;
     }
 
-    public boolean init(Double memoriaDisponivel, Double discoDisponivel, Double usoCpu, Long idLog) {
+    public boolean init(Integer fk_computador, Double memoriaDisponivel, Double discoDisponivel, Double usoGpu, Double usoCpu, Double usoRede, Double temperatura) {
         try {
             configs = configUseCase.index(fk_empresa);
             boolean alerta = false;
@@ -38,6 +40,15 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_ram")) {
                     if (memoriaDisponivel < config.getValor()) {
                         if (quantidadeAlertasMemoria == 2) {
+                            long idLog = logUseCase.store(
+                                    fk_computador,
+                                    memoriaDisponivel,
+                                    discoDisponivel,
+                                    0.0,
+                                    usoCpu,
+                                    0.0,
+                                    50.2
+                            );
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* Memória em nível baixo");
                             JSONObject object = new JSONObject();
                             object.put("problema", "Pouca RAM disponível");
@@ -58,6 +69,15 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_disco")) {
                     if (discoDisponivel > config.getValor()) {
                         if (quantidadeAlertasDisco == 1) {
+                            long idLog = logUseCase.store(
+                                    fk_computador,
+                                    memoriaDisponivel,
+                                    discoDisponivel,
+                                    0.0,
+                                    usoCpu,
+                                    0.0,
+                                    50.2
+                            );
                             JSONObject object = new JSONObject();
                             object.put("problema", "Espaço em disco");
                             object.put("hostname", util.getHostName());
@@ -78,6 +98,15 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_cpu")) {
                     if (usoCpu >= config.getValor()) {
                         if (quantidadeAlertasCPU == 3) {
+                            long idLog = logUseCase.store(
+                                    fk_computador,
+                                    memoriaDisponivel,
+                                    discoDisponivel,
+                                    0.0,
+                                    usoCpu,
+                                    0.0,
+                                    50.2
+                            );
                             JSONObject object = new JSONObject();
                             object.put("problema", "CPU com uso elevado");
                             object.put("hostname", util.getHostName());
