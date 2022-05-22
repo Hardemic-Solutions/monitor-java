@@ -16,7 +16,7 @@ public class HardComputadorUseCase {
         return hardComputadoresRepository.index(fk_computador);
     }
     
-    public void store(Double ram, Double armazenamento, Double gpu, Integer fk_computador, String SO){
+    public void store(Double ram, Double armazenamento, Integer gpu, Integer fk_computador, String SO){
         HardComputadoresRepository hardComputadoresRepository = new HardComputadoresRepository();
         
         hardComputadoresRepository.store(ram, armazenamento, gpu, fk_computador, SO);
