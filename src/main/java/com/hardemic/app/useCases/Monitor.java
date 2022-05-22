@@ -11,18 +11,22 @@ import com.github.britooo.looca.api.group.memoria.Memoria;
 import com.github.britooo.looca.api.group.processador.Processador;
 import com.github.britooo.looca.api.group.sistema.Sistema;
 
-import com.hardemic.app.UtilApp;
-import com.hardemic.app.UtilLooca;
+import com.hardemic.app.utils.UtilApp;
+import com.hardemic.app.utils.UtilLooca;
 import com.hardemic.app.entities.Computador;
 import com.hardemic.app.entities.HardComputador;
 import com.hardemic.app.services.Slack;
+import com.hardemic.app.services.SocketConnection;
 import com.hardemic.app.utils.ClearConsole;
 import com.hardemic.app.utils.Colors;
 import com.hardemic.app.utils.Logs;
 import com.hardemic.app.utils.ProcessarAlerta;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 import java.util.List;
-
+import org.json.JSONObject;
 
 public class Monitor {
 
@@ -37,7 +41,6 @@ public class Monitor {
     private final LogUseCase logUseCase = new LogUseCase();
     private final ComputadorUseCase computadorUseCase = new ComputadorUseCase();
     private final HardComputadorUseCase hardComputadorUseCase = new HardComputadorUseCase();
- 
 
     // Grupos looca
     private Sistema sistema;
@@ -50,7 +53,7 @@ public class Monitor {
 
     // Contador para verificar se o sistema já foi iniciado
     private Integer inicializado = 0;
-    
+
     // Contador para registro no banco
     private Integer segundos = 0;
 
@@ -64,6 +67,10 @@ public class Monitor {
 
     public void init() {
         try {
+            JSONObject object = new JSONObject();
+            object.put("hostname", util.getHostName());
+            SocketConnection.getInstance().getSocket().emit("pegar_dados", object);
+
             ClearConsole.clearConsole();
             sistema = looca.getSistema();
             inicializado++;
@@ -77,11 +84,10 @@ public class Monitor {
                 List<HardComputador> hardComputadores = hardComputadorUseCase.findByFkComputador(this.fkComputador);
 
                 if (hardComputadores.isEmpty()) {
-
                     hardComputadorUseCase.store(
                             Double.valueOf((memoria.getTotal() / 1024) / 1024),
                             Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
-                            0.0,
+                            0,
                             this.fkComputador,
                             sistema.getSistemaOperacional()
                     );
@@ -90,48 +96,55 @@ public class Monitor {
                     slack.infoMessage(":computer: *Novo hardware de pc identificado*: *" + util.getHostName() + "*");;
                 } else {
                     // Implementar a lógica para verficar se o hardware é o mesmo
-                    HardComputador hardPc = hardComputadores.get(0);
+                    HardComputador hardPc = hardComputadores.get(hardComputadores.size() - 1);
                     boolean mudou = false;
 
-                    if (hardPc.getRam() != Double.valueOf((memoria.getTotal() / 1024) / 1024)) {
-                         mudou = true;
+                    if (Double.compare(hardPc.getRam(), Double.valueOf((memoria.getTotal() / 1024))) == 0) {
+                        mudou = true;
+                        System.out.println("ram");
                         hardComputadorUseCase.store(
-                            Double.valueOf((memoria.getTotal() / 1024) / 1024),
-                            Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
-                            0.0,
-                            this.fkComputador,
-                            sistema.getSistemaOperacional()
+                                Double.valueOf((memoria.getTotal() / 1024) / 1024),
+                                Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
+                                0,
+                                this.fkComputador,
+                                sistema.getSistemaOperacional()
                         );
-                    } else if (hardPc.getArmazenamento() != (grupoDeDiscos.getTamanhoTotal() / 1024) / 1024) {
-                         mudou = true;
+                    } else if (Double.compare(hardPc.getArmazenamento(), (grupoDeDiscos.getTamanhoTotal() / 1024)) == 0) {
+                        mudou = true;
+                        System.out.println("disco");
                         hardComputadorUseCase.store(
-                            Double.valueOf((memoria.getTotal() / 1024) / 1024),
-                            Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
-                            0.0,
-                            this.fkComputador,
-                            sistema.getSistemaOperacional()
-                    );
+                                Double.valueOf((memoria.getTotal() / 1024) / 1024),
+                                Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
+                                0,
+                                this.fkComputador,
+                                sistema.getSistemaOperacional()
+                        );
                     } else if (hardPc.getGpu() != 0) {
-                         mudou = true;
+                        System.out.println("gpu");
+                        mudou = true;
                         hardComputadorUseCase.store(
-                            Double.valueOf((memoria.getTotal() / 1024) / 1024),
-                            Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
-                            0.0,
-                            this.fkComputador,
-                            sistema.getSistemaOperacional()
-                    );
+                                Double.valueOf((memoria.getTotal() / 1024) / 1024),
+                                Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
+                                0,
+                                this.fkComputador,
+                                sistema.getSistemaOperacional()
+                        );
 
-                    } else if (hardPc.getSO() != sistema.getSistemaOperacional()) {
-                         mudou = true;
+                    } else if (!hardPc.getSO().equalsIgnoreCase(sistema.getSistemaOperacional())) {
+                        System.out.println("so");
+                        System.out.println(hardPc.getSO());
+                        System.out.println(sistema.getSistemaOperacional());
+                        mudou = true;
                         hardComputadorUseCase.store(
-                            Double.valueOf((memoria.getTotal() / 1024) / 1024),
-                            Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
-                            0.0,
-                            this.fkComputador,
-                            sistema.getSistemaOperacional()
-                    );
+                                Double.valueOf((memoria.getTotal() / 1024) / 1024),
+                                Double.valueOf((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024),
+                                0,
+                                this.fkComputador,
+                                sistema.getSistemaOperacional()
+                        );
+                    }
 
-                    if(mudou == true)   
+                    if (mudou == true) {
                         System.out.println("Hardware atualizado no sistema");
                         logs.info("Hardware atualizado no sistema");
                     }
@@ -144,7 +157,7 @@ public class Monitor {
                 while (true) {
                     Thread.sleep(1000);
                     segundos++;
-                    ClearConsole.clearConsole();
+                    ClearConsole.clearConsole();;
                     this.loop();
                 }
             } else {
@@ -159,7 +172,7 @@ public class Monitor {
                 Thread.sleep(1000);
                 this.init();
             } catch (InterruptedException ex) {
-               logs.severe("Erro ao reiniciar a aplicação, erro: " + ex.getMessage() );
+                logs.severe("Erro ao reiniciar a aplicação, erro: " + ex.getMessage());
             }
         }
     }
@@ -189,40 +202,38 @@ public class Monitor {
         System.out.println("======================================================================\n");
 
         System.out.println(
-                String.format(
-                        " MEMÓRIA:             %.2fGB usado / %dGB total \n"
-                        + " ARMAZENAMENTO:       %dGB usado / %dGB total\n"
+                String.format(" MEMÓRIA:             %.2fmb disponivel / %dGB total \n"
+                        + " ARMAZENAMENTO:       %dGB disponivel / %dGB total\n"
                         + " USO PROCESSADOR:     %s%%"
                         + "\n\n",
                         memoriaDisponivel,
                         (memoria.getTotal() / 1024) / 1024 / 1024,
-                        discoDisponivel.intValue(),
+                        (discoDisponivel.intValue() / 1024),
                         ((grupoDeDiscos.getTamanhoTotal() / 1024) / 1024 / 1024),
                         usoCpu
                 )
         );
 
         System.out.println("======================================================================\n");
-        if(segundos == 20){
+        if (segundos == 20) {
             try {
-               logUseCase.store(
-                       fkComputador,
-                       memoriaDisponivel,
-                       discoDisponivel,
-                       0.0,
-                       usoCpu,
-                       0.0,
-                       50.2
-               );
-           } catch (Exception e) {
-               System.out.println("Erro ao inserir log no banco de dados...");
-               logs.severe("Erro ao inserir logs no banco");
-           }
-           segundos = 0;
+                logUseCase.store(
+                        fkComputador,
+                        memoriaDisponivel,
+                        discoDisponivel,
+                        0.0,
+                        usoCpu,
+                        0.0,
+                        50.2
+                );
+            } catch (Exception e) {
+                System.out.println("Erro ao inserir log no banco de dados...");
+                logs.severe("Erro ao inserir logs no banco");
+            }
+            segundos = 0;
         }
-       
-        
-        if(processarAlerta.init(memoriaDisponivel, discoDisponivel, usoCpu)){
+
+        if (processarAlerta.init(memoriaDisponivel, discoDisponivel, usoCpu)) {
             segundos = 0;
         }
         processador = looca.getProcessador();

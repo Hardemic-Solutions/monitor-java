@@ -7,6 +7,7 @@ package com.hardemic.app;
 
 import com.hardemic.app.Views.Cli;
 import com.hardemic.app.Views.LoginView;
+import com.hardemic.app.services.SocketConnection;
 import com.hardemic.app.utils.Logs;
 import java.util.Arrays;
 
@@ -14,6 +15,7 @@ public class Application {
 
     public static void main(String[] args) {
         Logs logs = new Logs();
+        SocketConnection.getInstance();
         if(Arrays.stream(args).anyMatch("cli"::equals)){;
             logs.info("Aplicação iniciada via cli...");
             Cli.init();

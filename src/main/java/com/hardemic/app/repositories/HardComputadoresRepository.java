@@ -16,7 +16,7 @@ public class HardComputadoresRepository {
     public List<HardComputador> index(Integer fk_computador) {
         try {
             JdbcTemplate template = new Connection().createConnection();
-            return template.query("SELECT * FROM tb_hard_computadores where fk_computador = ? order by id_hard desc;", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
+            return template.query("SELECT * FROM tb_hard_computadores where fk_computador = ?", new BeanPropertyRowMapper<>(HardComputador.class), fk_computador);
         } catch (DataAccessException e) {
             System.out.println("Erro SQL (listar hardware do computador no bd): " + e.getMessage());
             return null;
@@ -26,7 +26,7 @@ public class HardComputadoresRepository {
         }
     }
 
-    public void store(Double ram, Double armazenamento, Double gpu, Integer fk_computador, String SO) {
+    public void store(Double ram, Double armazenamento, Integer gpu, Integer fk_computador, String SO) {
         JdbcTemplate template = new Connection().createConnection();
         template.update("INSERT INTO tb_hard_computadores ( ram, armazenamento, gpu, fk_computador, SO ) VALUES (?, ?, ?, ?, ?)", ram, armazenamento, gpu, fk_computador, SO);
     }

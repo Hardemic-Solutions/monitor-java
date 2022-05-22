@@ -1,10 +1,11 @@
 package com.hardemic.app.utils;
 
-import com.hardemic.app.UtilLooca;
 import com.hardemic.app.services.Slack;
 import com.hardemic.app.useCases.ConfigUseCase;
 import com.hardemic.app.entities.Config;
+import com.hardemic.app.services.SocketConnection;
 import java.util.List;
+import org.json.JSONObject;
 
 public class ProcessarAlerta {
 
@@ -36,6 +37,10 @@ public class ProcessarAlerta {
                     if (memoriaDisponivel < config.getValor()) {
                         if (quantidadeAlertasMemoria == 2) {
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* Memória em nível baixo");
+                            JSONObject object = new JSONObject();
+                            object.put("problema", "Pouca RAM disponível");
+                            object.put("hostname", util.getHostName());
+                            SocketConnection.getInstance().getSocket().emit("problema", object);
                             alerta = true;
                         }
                         quantidadeAlertasMemoria++;
@@ -46,6 +51,10 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_disco")) {
                     if (discoDisponivel > config.getValor()) {
                         if (quantidadeAlertasDisco == 1) {
+                            JSONObject object = new JSONObject();
+                            object.put("problema", "Espaço em disco");
+                            object.put("hostname", util.getHostName());
+                            SocketConnection.getInstance().getSocket().emit("problema", object);
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* pouco espaço em disco disponível");
                             alerta = true;
                         }
@@ -57,6 +66,10 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_cpu")) {
                     if (usoCpu >= config.getValor()) {
                         if (quantidadeAlertasCPU == 3) {
+                            JSONObject object = new JSONObject();
+                            object.put("problema", "CPU com uso elevado");
+                            object.put("hostname", util.getHostName());
+                            SocketConnection.getInstance().getSocket().emit("problema", object);
                             slack.warningMessage(":computer: *" + util.getHostName() + ":* Uso de cpu elevado");
                             alerta = true;
                         }
