@@ -1,17 +1,17 @@
 version: "3.7"
 services:
- app:
-   stdin_open: true
-   tty: true
-   build: .
-   restart: always
-   hostname: ubuntu01
-  # app_image:
-  #   stdin_open: true
-  #   tty: true
-  #   image: hardemic/monitor:v2
-  #   restart: always
-  #   hostname: ubuntu01
+  app:
+    stdin_open: true
+    tty: true
+    image: hardemic/monitor
+    restart: always
+    hostname: ubuntu01
+    # app_image:
+    #   stdin_open: true
+    #   tty: true
+    #   image: hardemic/monitor:v2
+    #   restart: always
+    #   hostname: ubuntu01
 #    depends_on:
 #        - db
 #  db:
@@ -20,4 +20,4 @@ services:
 #    restart: always
 #    environment:
 #      MYSQL_ROOT_PASSWORD: example
-    
+

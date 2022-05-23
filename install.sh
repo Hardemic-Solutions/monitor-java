@@ -18,29 +18,35 @@ echo "============================"
 read -p "Escolha uma opção: " opcao
 
 installjava(){
+  # Verificando se o java já está instalado => retorna 0 se estiver
   which java | grep /usr/bin/java 
-
+  # Se o resultado do comando anterior não for igual a 0 
   if [ $? -ne 0 ]
   then
+    # Instala o zip
     sudo apt install zip -y
-
+    # Verifica se o sdkman está instalado
     sdk v
-
+    # Se o resultado do comando anterior não for igual a 0 
     if [ $? -ne 0 ]
     then
+    # Instala o sdkman
       curl -s "https://get.sdkman.io" | bash
-
+  
       source "/home/$USER/.sdkman/bin/sdkman-init.sh"
-
+    # Instala o jdk11 
       sdk install java  11.0.14.10.1-amzn
 
     fi
   fi
+  # Verifica se o maven está instalado
 
   mvn -v
+  # Se o resultado do comando anterior não for igual a 0 
 
   if [ $? -ne 0 ]
   then
+  # Instala o maven
     sudo apt install maven -y
   fi
 }
@@ -76,46 +82,39 @@ installdocker(){
     clear
   fi
 
-  sudo systectl start docker
-
   sudo service docker start
-  
+  sudo service docker enable  
 }
 
 case $opcao in
 1) echo "=== CLI ==="
-   
+# Chamando a função para instalar o java  
   installjava
 
-  cd hardemic-pi-test
+  cd ~/
 
-  mvn clean install
+  curl -O https://hardemic-pi.s3.amazonaws.com/hardemic.jar
 
-  java -jar target/hardemic-1.0-jar-with-dependencies.jar cli
-
+# Executando o jar
+  java -jar hardemic.jar cli
   clear
-
-  java -jar hardemic-1.0-jar-with-dependencies.jar cli
   ;;
 2) echo "=== GUI ===" 
    installjava
 
-   cd hardemic-pi-test
+   cd ~/
 
-   mvn clean install
+   curl -O https://hardemic-pi.s3.amazonaws.com/hardemic.jar
 
-   java -jar target/hardemic-1.0-jar-with-dependencies.jar
+   java -jar target/hardemic.jar
 
-  clear
-
-  java -jar hardemic-1.0-jar-with-dependencies.jar
+   clear
   ;;
 3) echo "=== DOCKER ===" 
    installdocker
 
-   cd hardemic-pi-test
+   cd ~/
 
-   sudo docker build -t hardemic/monitor .
    sudo docker run -it --hostname $HOSTNAME hardemic/monitor
    
   ;;
@@ -129,9 +128,11 @@ case $opcao in
     sudo apt-get install docker-compose -y
    fi
 
-   cd hardemic-pi-test
+   cd ~/
 
-   sudo docker-compose build && sudo docker-compose run app
+   curl -O https://hardemic-pi.s3.amazonaws.com/docker-compose.yaml
+
+   sudo docker-compose run app
   ;;
 *) echo "Opção $opcao Inválida!" 
    sleep 1
