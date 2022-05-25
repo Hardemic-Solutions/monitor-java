@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class Connection {
 
     private BasicDataSource dataSource;
+    private BasicDataSource dataSourceMySql;
+
 
     public Connection() {
         InputStream input;
@@ -37,6 +39,10 @@ public class Connection {
 
     public BasicDataSource getDataSource() {
         return dataSource;
+    }
+    
+    public BasicDataSource getDataSourceMySql() {
+        return dataSourceMySql;
     }
 
     public JdbcTemplate createConnection() {
