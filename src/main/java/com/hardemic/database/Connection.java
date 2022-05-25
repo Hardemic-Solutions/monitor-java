@@ -30,6 +30,12 @@ public class Connection {
             dataSource = new BasicDataSource();
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             dataSource.setUrl(prop.getProperty("db.url"));
+            
+            dataSourceMySql = new BasicDataSource();
+            dataSourceMySql.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSourceMySql.setUrl("jdbc:mysql://database:3306/hardemic");
+            dataSourceMySql.setUsername("root");
+            dataSourceMySql.setPassword("root");
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo de configurações não encontrado...");
         } catch (IOException e) {
@@ -47,5 +53,9 @@ public class Connection {
 
     public JdbcTemplate createConnection() {
         return new JdbcTemplate(dataSource);
+    }
+    
+    public JdbcTemplate createConnectionMysql() {
+        return new JdbcTemplate(dataSourceMySql);
     }
 }

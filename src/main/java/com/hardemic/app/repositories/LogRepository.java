@@ -31,6 +31,19 @@ public class LogRepository {
                     + "rede,"
                     + "temperatura) "
                     + "VALUES(?,?,?,?,?,?,?)";
+
+         JdbcTemplate template = new Connection().createConnectionMysql();
+         template.update(sql, fk_computador, memoriaDisponivel,discoDisponivel,usoGpu,usoCpu,usoRede,temperatura);
+        // try{
+        //     JdbcTemplate template = new Connection().createConnectionMysql();
+        //     template.update(sql, fk_computador, memoriaDisponivel,discoDisponivel,usoGpu,usoCpu,usoRede,temperatura);
+        //     System.out.println("Inserido no bd local com sucesso!");
+        // }catch(DataAccessException e){
+        //     System.out.println("Erro SQL (inserir device no bd local): " + e.getMessage());
+        // }catch(Exception e){
+        //     System.out.println("Erro desconhecido (inserir device no bd local): " + e.getMessage());
+        // }
+                    
         try (PreparedStatement statement = new Connection().getDataSource().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setDouble(1, fk_computador);
             statement.setDouble(2, memoriaDisponivel);
@@ -40,7 +53,6 @@ public class LogRepository {
             statement.setDouble(6, usoRede);
             statement.setDouble(7, temperatura);
             int affectedRows = statement.executeUpdate();
-            
             
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 while(keys.next()){
