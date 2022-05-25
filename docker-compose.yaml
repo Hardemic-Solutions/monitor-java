@@ -4,10 +4,10 @@ services:
     container_name: monitor
     stdin_open: true
     tty: true
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # image: hardemic/monitor
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: hardemic/monitor
     restart: always
     hostname: ubuntu01
     depends_on:
