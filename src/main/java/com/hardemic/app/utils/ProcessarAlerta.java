@@ -98,6 +98,7 @@ public class ProcessarAlerta {
                 if (config.getNome_config().equalsIgnoreCase("alerta_cpu")) {
                     if (usoCpu >= config.getValor()) {
                         if (quantidadeAlertasCPU == 3) {
+                            
                             long idLog = logUseCase.store(
                                     fk_computador,
                                     memoriaDisponivel,

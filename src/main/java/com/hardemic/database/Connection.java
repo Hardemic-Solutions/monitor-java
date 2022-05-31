@@ -16,7 +16,6 @@ public class Connection {
     private BasicDataSource dataSource;
     private BasicDataSource dataSourceMySql;
 
-
     public Connection() {
         InputStream input;
 
@@ -33,9 +32,7 @@ public class Connection {
             
             dataSourceMySql = new BasicDataSource();
             dataSourceMySql.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSourceMySql.setUrl("jdbc:mysql://database:3306/hardemic");
-            dataSourceMySql.setUsername("root");
-            dataSourceMySql.setPassword("root");
+            dataSourceMySql.setUrl("jdbc:mysql://database:3306/hardemic?user=root&password=root&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false");
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo de configurações não encontrado...");
         } catch (IOException e) {
