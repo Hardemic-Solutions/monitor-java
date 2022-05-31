@@ -19,19 +19,29 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 public class LogRepository {
+
     private final Logs logs = new Logs();
 
     public long store(Integer fk_computador, Double memoriaDisponivel, Double discoDisponivel, Double usoGpu, Double usoCpu, Double usoRede, Double temperatura) {
         String sql = "INSERT INTO tb_logs("
-                    + "fk_computador,"
-                    + "ram,"
-                    + "disco,"
-                    + "gpu,"
-                    + "cpu,"
-                    + "rede,"
-                    + "temperatura) "
-                    + "VALUES(?,?,?,?,?,?,?)";
-        try (PreparedStatement statement = new Connection().getDataSource().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                + "fk_computador,"
+                + "ram,"
+                + "disco,"
+                + "gpu,"
+                + "cpu,"
+                + "rede,"
+                + "temperatura) "
+                + "VALUES(?,?,?,?,?,?,?)";
+
+        try {
+            JdbcTemplate template = new Connection().createConnectionMysql();
+            template.update(sql, fk_computador, memoriaDisponivel, discoDisponivel, usoGpu, usoCpu, usoRede, temperatura);
+            System.out.println("Log salvo no banco local");
+        } catch (Exception e) {
+            System.out.println("Erro ao inserir log no bd local" + e.getMessage());
+        }
+
+        try ( PreparedStatement statement = new Connection().getDataSource().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setDouble(1, fk_computador);
             statement.setDouble(2, memoriaDisponivel);
             statement.setDouble(3, discoDisponivel);
@@ -40,11 +50,10 @@ public class LogRepository {
             statement.setDouble(6, usoRede);
             statement.setDouble(7, temperatura);
             int affectedRows = statement.executeUpdate();
-            
-            
-            try (ResultSet keys = statement.getGeneratedKeys()) {
-                while(keys.next()){
-                 return keys.getLong(1);
+
+            try ( ResultSet keys = statement.getGeneratedKeys()) {
+                while (keys.next()) {
+                    return keys.getLong(1);
                 }
             }
             // omitted

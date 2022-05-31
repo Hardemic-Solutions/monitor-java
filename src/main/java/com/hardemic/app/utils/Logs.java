@@ -43,11 +43,11 @@ public class Logs {
         try {
             this.SO = locca.getSistema().getSistemaOperacional();
             
-            if (SO.contains("Windows")){
-              this.rootDir = "C:\\";
-            }else{
-                this.rootDir = "/home/lukas/";;
-            }
+            // if (SO.contains("Windows")){
+            //   this.rootDir = "C:\\";
+            // }else{
+                this.rootDir = "/home/$USER/";;
+            // }
             
             diretorio = new File(rootDir + "hardemic_logs/");
             
@@ -75,7 +75,7 @@ public class Logs {
             bw.close();
             fw.close();
         } catch (IOException e) {
-            System.out.println("Error:" + e.getMessage());
+            System.out.println("Error logs class:" + e.getMessage());
         }
     }
 }

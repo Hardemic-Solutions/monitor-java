@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class Connection {
 
     private BasicDataSource dataSource;
+    private BasicDataSource dataSourceMySql;
 
     public Connection() {
         InputStream input;
@@ -28,6 +29,10 @@ public class Connection {
             dataSource = new BasicDataSource();
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             dataSource.setUrl(prop.getProperty("db.url"));
+            
+            dataSourceMySql = new BasicDataSource();
+            dataSourceMySql.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSourceMySql.setUrl("jdbc:mysql://database:3306/hardemic?user=root&password=root&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false");
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo de configurações não encontrado...");
         } catch (IOException e) {
@@ -38,8 +43,16 @@ public class Connection {
     public BasicDataSource getDataSource() {
         return dataSource;
     }
+    
+    public BasicDataSource getDataSourceMySql() {
+        return dataSourceMySql;
+    }
 
     public JdbcTemplate createConnection() {
         return new JdbcTemplate(dataSource);
+    }
+    
+    public JdbcTemplate createConnectionMysql() {
+        return new JdbcTemplate(dataSourceMySql);
     }
 }

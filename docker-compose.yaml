@@ -1,23 +1,44 @@
 version: "3.7"
 services:
   app:
+    container_name: monitor
     stdin_open: true
     tty: true
-    image: hardemic/monitor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: hardemic/monitor:latest
     restart: always
     hostname: ubuntu01
-    # app_image:
-    #   stdin_open: true
-    #   tty: true
-    #   image: hardemic/monitor:v2
-    #   restart: always
-    #   hostname: ubuntu01
-#    depends_on:
-#        - db
-#  db:
-#    image: mysql
-#    command: --default-authentication-plugin=mysql_native_password
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: example
-
+    depends_on:
+      - database
+    networks:
+      - mysql-compose-network
+  database:
+    container_name: database
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    expose:
+    # Opens port 3306 on the container
+    - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hardemic
+      MYSQL_USERNAME: docker
+      MYSQL_PASSWORD: docker
+    volumes:
+      - mysqlvol:/var/lib/mysql
+      # - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - mysql-compose-network
+volumes:
+  mysqlvol: {}
+networks: 
+  mysql-compose-network:
+    driver: bridge
