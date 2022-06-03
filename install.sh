@@ -121,7 +121,7 @@ case $opcao in
 
    sudo docker network create -d bridge mysql-compose-network
 
-   sudo docker run -d --net=mysql-compose-network  -it --hostname $HOSTNAME hardemic/database
+   sudo docker run -d --net=mysql-compose-network hardemic/database
 
    sudo docker run -it --net=mysql-compose-network --link hardemic/database -it --hostname $HOSTNAME hardemic/monitor
 
