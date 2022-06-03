@@ -111,8 +111,6 @@ case $opcao in
    java -jar hardemic.jar
 
   clear
-
-  java -jar hardemic-1.0-jar-with-dependencies.jar
   ;;
 
 
