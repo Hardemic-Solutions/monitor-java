@@ -19,7 +19,7 @@ public class SocketConnection {
 
     private SocketConnection() {
         try {
-            socket = IO.socket("http://localhost:3333");
+            socket = IO.socket("20.127.58.43:3333");
         } catch (URISyntaxException ex) {
             logs.warning("Erro ao se conectar no servidor socket");
         }
@@ -36,3 +36,4 @@ public class SocketConnection {
         return socket.connect();
     };
 }
+
