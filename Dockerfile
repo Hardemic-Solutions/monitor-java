@@ -11,6 +11,8 @@ RUN mvn clean package -Dmaven.test.skip
 #COPY . .
 #RUN mvn clean package -Dmaven.test.skip
 
+
+
 FROM openjdk:11-jre-slim
 
 #WORKDIR /hardemic
