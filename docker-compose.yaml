@@ -24,8 +24,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hardemic
-      MYSQL_USERNAME: docker
-      MYSQL_PASSWORD: docker
+      MYSQL_USERNAME: docker 
+      MYSQL_PASSWORD: docker 
     volumes:
       - mysqlvol:/var/lib/mysql
     

@@ -21,4 +21,6 @@ COPY --from=MAVEN_BUILD /home/app/target/hardemic-1.0-jar-with-dependencies.jar 
 
 CMD ["java","-jar","/usr/local/lib/hardemic.jar","cli"]
 
-RUN ls --list
+
+RUN ls
+
