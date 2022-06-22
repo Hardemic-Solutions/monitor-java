@@ -5,6 +5,8 @@ WORKDIR /home/app/
 COPY pom.xml pom.xml
 RUN mvn clean package -Dmaven.test.skip -Dmaven.main.skip
 
+
+
 COPY src ./src
 RUN mvn clean package -Dmaven.test.skip
 
